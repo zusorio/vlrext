@@ -136,6 +136,10 @@ export default defineContentScript({
   matches: ["*://*.vlr.gg/*"],
   cssInjectionMode: "ui",
   async main(ctx) {
+    const darkMode = document
+      .querySelector(".js-dark-switch")!
+      .classList.contains("mod-active");
+
     const gamesNav = document.querySelector(".vm-stats-gamesnav")!;
     const gameButtons = gamesNav.querySelectorAll(".vm-stats-gamesnav-item");
 
@@ -163,7 +167,7 @@ export default defineContentScript({
       append: "after",
       anchor: gamesNav,
       onMount(container) {
-        const app = createApp(App, { games });
+        const app = createApp(App, { games, darkMode });
         const pinia = createPinia();
         pinia.use(piniaPluginPersistedstate);
 

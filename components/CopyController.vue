@@ -4,7 +4,7 @@ import { Toggle, ToggleGroupItem, ToggleGroupRoot } from "reka-ui";
 import { usePreferencesStore } from "@/stores/preferences";
 import { storeToRefs } from "pinia";
 
-const props = defineProps<{ games: Game[] }>();
+const props = defineProps<{ games: Game[]; darkMode: boolean }>();
 
 const preferencesStore = usePreferencesStore();
 const { selectedPlayer, enableHeader } = storeToRefs(preferencesStore);
@@ -77,8 +77,8 @@ function copyGames(games: Game[]) {
 </script>
 
 <template>
-  <div class="font-sans p-2 space-y-2">
-    <div class="font-bold">Select Player</div>
+  <div class="font-sans p-2 space-y-2" :class="{ dark: darkMode }">
+    <div class="font-bold dark:text-white">Select Player</div>
     <ToggleGroupRoot
       type="single"
       class="flex flex-wrap gap-2"
@@ -93,7 +93,7 @@ function copyGames(games: Game[]) {
       </ToggleGroupItem>
     </ToggleGroupRoot>
 
-    <div class="font-bold">
+    <div class="font-bold dark:text-white">
       {{ justCopied ? "Copied Stats!" : "Copy Stats" }}
     </div>
 
