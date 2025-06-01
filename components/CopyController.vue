@@ -38,7 +38,7 @@ function copyGames(games: Game[]) {
 
   if (enableHeader.value) {
     textToCopy +=
-      "Player\tAgent\tRating 20\tACS\tKills\tDeaths\tAssists\tAvg Damage/Round\tHeadshot %\tFirst Kills\tFirst Deaths\tKAST\n";
+      "Player\tAgent\tRating 20\tACS\tKills\tDeaths\tK/D\tAssists\tAvg Damage/Round\tHeadshot %\tFirst Kills\tFirst Deaths\tKAST\tRounds\n";
   }
 
   for (const game of games) {
@@ -59,12 +59,14 @@ function copyGames(games: Game[]) {
       targetStats.bothRoundStats.averageCombatScore,
       targetStats.bothRoundStats.kills,
       targetStats.bothRoundStats.deaths,
+      targetStats.bothRoundStats.killsDeathsDifferential,
       targetStats.bothRoundStats.assists,
       targetStats.bothRoundStats.averageDamagePerRound,
       targetStats.bothRoundStats.headshotPercentage,
       targetStats.bothRoundStats.firstKills,
       targetStats.bothRoundStats.firstDeaths,
       targetStats.bothRoundStats.killAssistTradeSurvivePercentage,
+      game.score!.team1 + game.score!.team2, // Total rounds played
     ];
 
     textToCopy += elements.join("\t") + "\n";

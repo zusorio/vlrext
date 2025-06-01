@@ -26,10 +26,16 @@ export interface PlayerStats {
   defendingRoundStats: RoundStats;
 }
 
+export interface MapScore {
+  team1: number;
+  team2: number;
+}
+
 export interface Game {
   gameId: string;
   mapName: string;
   available: boolean;
+  score: MapScore | null;
   stats: PlayerStats[] | null;
 }
 
@@ -132,6 +138,28 @@ function extractStats(gameId: string): PlayerStats[] {
   );
 }
 
+function extractScore(gameId: string): MapScore | null {
+  const gameElement = document.querySelector(
+    `.vm-stats-game[data-game-id="${gameId}"]`,
+  );
+
+  if (!gameElement) {
+    console.warn(`Game element not found for ID: ${gameId}`);
+    return null;
+  }
+
+  const header = gameElement.querySelector(".vm-stats-game-header")!;
+  const scores = header.querySelectorAll(".score");
+
+  const [team1Score, team2Score] = Array.from(scores).map(
+    (score) => score.textContent?.trim() ?? "0",
+  );
+  return {
+    team1: parseInt(team1Score),
+    team2: parseInt(team2Score),
+  };
+}
+
 export default defineContentScript({
   matches: ["*://*.vlr.gg/*"],
   cssInjectionMode: "ui",
@@ -155,6 +183,8 @@ export default defineContentScript({
         gameId,
         mapName: mapName,
         available,
+        score:
+          available && mapName !== "All Maps" ? extractScore(gameId) : null,
         stats: available ? extractStats(gameId) : null,
       };
     });
